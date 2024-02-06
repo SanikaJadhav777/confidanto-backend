@@ -25,13 +25,14 @@ con.connect(function (err) {
 
 app.post("/login", (req, res) => {
   const sql = "select * from register where email = ? and password = ?";
+  let verified = false;
   con.query(sql, [req.body.userName, req.body.password], (err, data) => {
     if (err) {
       return res.json("Login Failed");
     } else {
-      console.log(data[0].verify_status);
       if (data.length > 0) {
-        if(data[0].verify_status == 1) {
+        verified = data[0].verify_status;
+        if(verified == 1) {
           logged_in_user_email = data[0].email;
           console.log(logged_in_user_email);
           const sql2 = "select * from additional_details where username = ?";
