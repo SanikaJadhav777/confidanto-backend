@@ -25,11 +25,12 @@ con.connect(function (err) {
 
 app.post("/login", (req, res) => {
   const sql = "select * from register where email = ? and password = ?";
-  let verified = false;
+  let verified = false
   con.query(sql, [req.body.userName, req.body.password], (err, data) => {
     if (err) {
       return res.json("Login Failed");
     } else {
+      //console.log(data[0].verify_status);
       if (data.length > 0) {
         verified = data[0].verify_status;
         if(verified == 1) {
@@ -91,6 +92,15 @@ app.post("/signup", (req, res) => {
 app.post("/forecasting", (req, res) => {
   const sql = "SELECT * FROM mastersheet where `category`=? and `subcategory` IN (?)";
   con.query(sql, [req.body.category, req.body.subcategory], (err, data) => {
+    console.log(req.body);
+    if (err) return res.json(err);
+    return res.json(data);
+  });
+});
+
+app.post("/edit_data", (req, res) => {
+  const sql = "UPDATE additional_details SET sucategory = ? WHERE username = ?";
+  con.query(sql, [req.body.subcategories, logged_in_user_email], (err, data) => {
     console.log(req.body);
     if (err) return res.json(err);
     return res.json(data);
