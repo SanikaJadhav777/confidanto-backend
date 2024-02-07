@@ -89,7 +89,7 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/forecasting", (req, res) => {
-  const sql = "SELECT * FROM mastersheet where`category`=? and `subcategory`=?";
+  const sql = "SELECT * FROM mastersheet where `category`=? and `subcategory` IN (?)";
   con.query(sql, [req.body.category, req.body.subcategory], (err, data) => {
     console.log(req.body);
     if (err) return res.json(err);
