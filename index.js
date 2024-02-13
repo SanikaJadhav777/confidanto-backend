@@ -4,17 +4,11 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
 const mysql = require("mysql");
-const session = require("express-session")
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(session({
-  secret: 'confidantousersession',
-  resave: true,
-  saveUninitialized: true
-}));
 
 const JWT_SECRET = "Confidanto123";
 let logged_in_user_email
