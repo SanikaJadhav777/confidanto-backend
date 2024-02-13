@@ -4,11 +4,18 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const Mailgen = require("mailgen");
 const mysql = require("mysql");
+const session = require("express-session")
 require("dotenv").config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(session({
+  secret: 'confidantousersession',
+  resave: true,
+  saveUninitialized: true
+}));
+
 const JWT_SECRET = "Confidanto123";
 let logged_in_user_email
 var con = mysql.createConnection({
@@ -22,6 +29,11 @@ con.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
+
+app.get("/", (req, res) => {
+  console.log("Hello");
+  res.send("Hello");
+})
 
 app.post("/login", (req, res) => {
   const sql = "select * from register where email = ? and password = ?";
@@ -90,22 +102,23 @@ app.post("/signup", (req, res) => {
 });
 
 app.post("/forecasting", (req, res) => {
-  const sql = "SELECT * FROM mastersheet where `category`=? and `subcategory` IN (?)";
-  con.query(sql, [req.body.category, req.body.subcategory], (err, data) => {
+  const sql = "SELECT * FROM mastersheet where `category`=? and `subcategory` IN (?) and `month` IN (?)";
+  con.query(sql, [req.body.category, req.body.subcategory, req.body.months], (err, data) => {
     console.log(req.body);
     if (err) return res.json(err);
+    //console.log(res.json(data));
     return res.json(data);
   });
 });
 
-app.post("/edit_data", (req, res) => {
+/*app.post("/edit_data", (req, res) => {
   const sql = "UPDATE additional_details SET sucategory = ? WHERE username = ?";
   con.query(sql, [req.body.subcategories, logged_in_user_email], (err, data) => {
-    console.log(req.body);
+    //console.log(req.body);
     if (err) return res.json(err);
     return res.json(data);
   });
-});
+});*/
 
 /*app.post("/additional_details", (req, res) => {
   const sql =
