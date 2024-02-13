@@ -332,7 +332,7 @@ app.post("/forgot-password", (req, res) => {
               button: {
                 color: "green",
                 text: "Reset Password",
-                link: `http://localhost:3000/reset_password/${userEmail}/${token}`,
+                link: `https://www.confidanto.com/reset-password/${userEmail}/${token}`,
               },
             },
             outro: "Link will be valid for only 15 minutes.",
